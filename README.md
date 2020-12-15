@@ -1,3 +1,3 @@
 # Molecular data explorer
 
-Dash script to create a web app to visualize molecular data and 3d molecular geometries
+Python script to create a web app with Dash to visualize molecular data and 3d molecular geometries
