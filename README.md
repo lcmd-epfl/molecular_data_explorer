@@ -1,5 +1,9 @@
 # Molecular data explorer
 
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4382473.svg)](https://doi.org/10.5281/zenodo.4382473)
+
+
 Python script to create a web app with Dash to visualize molecular data and molecular geometries
 
 ![alt text](screen_shot.png "Example")

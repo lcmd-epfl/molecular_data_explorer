@@ -76,7 +76,7 @@ info_text = [dcc.Markdown('''
     - Click once in the scatter plot to select a point and see the corresponding molecular structure, click twice to deselect it.
     - Select a row in the data table to see the corresponding molecular structure.
     - Change datapoint size with the sliding scale below the plot.
-    - Select atoms in the 2D view to compute distances, angles and dihedrals of the corresponding 3d geometry.
+    - Select atoms in the 2D view to compute distances, angles and dihedrals of the corresponding 3D geometry.
     ''')]
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
