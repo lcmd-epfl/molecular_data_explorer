@@ -2,6 +2,8 @@
 
 Python script to create a web app with Dash to visualize molecular data and molecular geometries
 
+![alt text](screen_shot.png "Example")
+
 ## Requirements
 - Python 3.6/3.7 
 
