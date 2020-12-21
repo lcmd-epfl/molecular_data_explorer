@@ -21,8 +21,8 @@ The data.csv will be read by pandas as `data = pd.read_csv('data.csv')`
 The format should be:
 
 data.csv------------------------ <br />
-col_name1, col_name2, col_name3, ... <br />
-val1, val2, val3,...
-...
+col_name1, col_name2, col_name3, ... , xyz_file_name  <br />
+val1, val2, val3,... , file.xyz
+... <br />
 end--------------------------------
 
