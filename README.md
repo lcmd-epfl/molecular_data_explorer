@@ -26,9 +26,9 @@ For example:
 
 data.csv------------------------ <br />
 col_name1, col_name2, col_name3, col_name4, xyz_file_name  <br />
-0, 0, 0, 0, file1.xyz
-0, 0, 0, 0, file2.xyz
-0, 0, 0, 0, file3.xyz
+0, 0, 0, 0, file1.xyz  <br />
+0, 0, 0, 0, file2.xyz  <br />
+0, 0, 0, 0, file3.xyz  <br />
 ... <br />
 end--------------------------------
 
