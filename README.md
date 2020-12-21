@@ -13,4 +13,15 @@ Use pip to install requirements:
 
 ## Usage
 
-Use 
+The app is executed as:
+
+`python mol_view.py data.csv xyz_structures_directory`
+
+The data.csv will be read by pandas as `data = pd.read_csv('data.csv')`
+The format should be:
+
+col_name1, col_name2, col_name3, ...
+val1, val2, val3,...
+...
+
+
