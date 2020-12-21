@@ -20,6 +20,8 @@ With data_test.csv and test_structures provided here it should be:
 
 `python mol_view.py data_test.csv test_structures`
 
+Then open the following addres: http://127.0.0.1:8060/ in your browser
+
 The data.csv will be read by pandas as `data = pd.read_csv('data.csv')`. 
 'xyz_structures_directory' should be the directory containing the xyz structures in different files.
 
