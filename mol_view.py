@@ -66,7 +66,7 @@ data_file = sys.argv[1]
 structures_dir = sys.argv[2]
 
 DATA = pd.read_csv(
-    data_file, index_col=0)
+    data_file)
 
 DATA['id'] = list(DATA.index)
 # DATA = DATA.round(5)
@@ -105,7 +105,7 @@ x_selection = dbc.FormGroup(
             dbc.Select(
                 id='selectX',
                 options=select_x_options,
-                value='S1DtoA'
+                value=DATA.columns[0]
             ), width=7
         )
     ], row=True
@@ -118,7 +118,7 @@ y_selection = dbc.FormGroup(
             dbc.Select(
                 id='selectY',
                 options=select_x_options,
-                value='T1AtoA'
+                value=DATA.columns[1]
             ), width=7
         )
     ], row=True
@@ -162,7 +162,7 @@ color_selection = dbc.FormGroup(
             dbc.Select(
                 id='selectColor',
                 options=select_x_options,
-                value='S1_T1_split'
+                value=DATA.columns[3]
             ), width=7
         )
     ], row=True
