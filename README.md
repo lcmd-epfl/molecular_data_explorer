@@ -1,7 +1,6 @@
 # Molecular data explorer
 
-Python script to create a web app with Dash to visualize molecular data and 3d molecular geometries
-
+Python script to create a web app with Dash to visualize molecular data and molecular geometries
 
 ## Requirements
 - Python 3.6/3.7 
@@ -16,6 +15,10 @@ Use pip to install requirements:
 The app is executed as:
 
 `python mol_view.py data.csv xyz_structures_directory`
+
+With data_test.csv and test_structures provided here it should be:
+
+`python mol_view.py data_test.csv test_structures`
 
 The data.csv will be read by pandas as `data = pd.read_csv('data.csv')`. 
 'xyz_structures_directory' should be the directory containing the xyz structures in different files.
@@ -33,3 +36,4 @@ col_name1, col_name2, col_name3, col_name4, xyz_file_name  <br />
 ... <br />
 end--------------------------------
 
+as in data_test.csv
