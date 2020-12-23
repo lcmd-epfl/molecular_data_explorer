@@ -24,7 +24,7 @@ The app is executed as:
 
 With data_test.csv and test_structures provided in examples/basic it should be:
 
-`python mol_view.py data_test.csv test_structures`
+`python mol_view.py examples/basic/data_test.csv examples/basic/test_structures`
 
 Then open the following addres: http://127.0.0.1:8060/ in your browser (the address can be changed in the last line of the script).
 
