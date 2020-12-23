@@ -200,7 +200,7 @@ app.layout = html.Div(children=[
             'margin-left': '10pt',
             'margin-top': '10pt',
             'text-align': 'center',
-            'margin-bottom': '20pt'
+            'margin-bottom': '0pt'
         }),
     html.Div([
         dbc.Row([

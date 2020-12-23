@@ -136,12 +136,24 @@ info_text = [dcc.Markdown('''
     - Computational data for each dimer can be found in the directory labelled with that compound’s index in the Materials Cloud archive.
 
     Please see the paper for further details:
-    ''', dangerously_allow_html=True), dcc.Link(
+    ''', dangerously_allow_html=True, style={"margin-bottom": "-12pt", "fontsize": "10%"}), dcc.Link(
     href='https://chemrxiv.org/articles/preprint/Identifying_the_Trade-off_between_Intramolecular_Singlet_Fission_Requirements_in_Donor-Acceptor_Copolymers/13333475/1',
     target='https://chemrxiv.org/articles/preprint/Identifying_the_Trade-off_between_Intramolecular_Singlet_Fission_Requirements_in_Donor-Acceptor_Copolymers/13333475/1',
     children=['Identifying the Trade-off between Intramolecular Singlet Fission Requirements in Donor-Acceptor Copolymers', ],
     refresh=False,
-)]
+    style={"margin-bottom": "25pt"},),
+    dcc.Markdown(dangerously_allow_html=True,
+                 children=[
+                     '''The app was built using :''',
+                 ],
+                 style={"margin-bottom": "-12pt", "fontsize": "10%"},),
+    dcc.Link(
+    href='https://github.com/lcmd-epfl/molecular_data_explorer',
+    target='https://github.com/lcmd-epfl/molecular_data_explorer',
+    children=['Molecular Data Explorer', ],
+    refresh=False,
+    )
+    ]
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -254,7 +266,7 @@ app.layout = html.Div(children=[
             "margin-left": "10pt",
             "margin-top": "10pt",
             "text-align": "center",
-            "margin-bottom": "20pt"
+            "margin-bottom": "0pt"
         }),
     html.Div([
         dbc.Row([
