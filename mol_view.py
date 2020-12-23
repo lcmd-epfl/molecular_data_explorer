@@ -69,7 +69,17 @@ DATA = pd.read_csv(
     data_file)
 
 DATA['id'] = list(DATA.index)
-# DATA = DATA.round(5)
+# DATA = DATA.round(6)
+
+# dtypes = DATA.dtypes
+
+# # round floats to N significant decimals
+# N = 4
+# for i, col in enumerate(DATA.columns):
+#     if dtypes[i] == float:
+#         DATA[col] = DATA[col].apply(lambda x: np.round(x, N - int(np.floor(np.log10(abs(x))))))
+
+# pd.options.display.float_format = '${:.2f}'.format
 
 info_text = [dcc.Markdown('''
     # App instructions
@@ -641,7 +651,10 @@ def show_table(bt, text):
                 page_size=10,
                 sort_by=[],
                 style_cell={
-                    'whiteSpace': 'normal'
+                    'overflow': 'hidden',
+                    'textOverflow': 'ellipsis',
+                    'maxWidth': '300px',
+                    'minWidth': '100px'
                 },
                 style_data_conditional=[{
                     'if': {'row_index': 'odd'},
