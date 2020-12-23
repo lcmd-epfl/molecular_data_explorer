@@ -9,7 +9,7 @@ Python script to create a web app with Dash to visualize molecular data and mole
 ![alt text](screen_shot.png "Example")
 
 ## Requirements
-- Python 3.6/3.7 
+- Python 3.6 or newer
 
 Use pip to install requirements:
 
