@@ -18,7 +18,7 @@ from dash.exceptions import PreventUpdate
 import dash_bio as dashbio
 import dash_html_components as html
 import dash_core_components as dcc
-from dash_bio_utils import xyz_reader
+# from dash_bio_utils import xyz_reader
 import dash_bootstrap_components as dbc
 import base64
 import dash_html_components as html
@@ -534,10 +534,14 @@ def tab_content(active_tab, memory):
     path = structures_dir + '/' + mol_name
 
     if active_tab == 'tab-speck':
-        mol = xyz_reader.read_xyz(datapath_or_datastring=path,
-                                  is_datafile=True)
+
+        mol = aio.read(path)
+        mol_data = [{'symbol': a, 'x': xyz[0],
+                     'y': xyz[1], 'z': xyz[2]} for a, xyz in zip(
+            mol.get_chemical_symbols(), mol.positions)]
+
         mol_plot = dashbio.Speck(
-            id='my-speck', data=mol,
+            id='my-speck', data=mol_data,
             view={
                 'zoom': 0.06,
                 'resolution': 450,
@@ -552,8 +556,6 @@ def tab_content(active_tab, memory):
     else:
         mol = aio.read(path)
         model_data = xyz_to_json(mol)
-        mol = xyz_reader.read_xyz(datapath_or_datastring=path,
-                                  is_datafile=True)
         mol_plot = html.Div([
             dashbio.Molecule2dViewer(
                 id='my-dashbio-molecule2d',
@@ -590,7 +592,8 @@ def update_selected_atoms(ids, memory):
     elif len(ids) == 4:
         dist = mol.get_dihedral(ids[0], ids[1], ids[2], ids[3])
         return 'Dihedral angle between atoms {}-{}-{}-{}: {:.3f}'.format(ids[0], ids[1],
-                                                                         ids[2], ids[3],
+                                                                         ids[2], ids[
+                                                                             3],
                                                                          dist)
     else:
         return 'Selected atom IDs: {}.'.format(', '.join([str(i) for i in ids]))
