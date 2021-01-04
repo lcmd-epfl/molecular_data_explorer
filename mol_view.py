@@ -741,4 +741,6 @@ def update_table(page_size, page_current, data_timestamp, sort_by, data):
     ]
 
 
-app.run_server(port=8060, debug=True)
+server = app.server
+if __name__ == '__main__':
+    app.run_server(port=8060, debug=True)
