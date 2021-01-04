@@ -20,7 +20,7 @@ Use pip to install requirements:
 
 The app is executed as:
 
-`python mol_view.py data.csv xyz_structures_directory`
+`python mol_view.py`
 
 With data_test.csv and test_structures provided in examples/basic it should be:
 

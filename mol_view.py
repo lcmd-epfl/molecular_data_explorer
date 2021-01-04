@@ -3,6 +3,7 @@
 # Run this app with `python mol_viewer.py` and
 # visit http://127.0.0.1:8060/ in your web browser.
 
+import os
 import dash
 import dash_table
 import dash_core_components as dcc
@@ -62,8 +63,16 @@ def xyz_to_json(mol):
     return data
 
 
-data_file = sys.argv[1]
-structures_dir = sys.argv[2]
+try:
+    data_file = sys.argv[1]
+except IndexError:
+    data_file = os.getenv('DATA_FILE', 'examples/basic/data_test.csv')
+
+try:
+    structures_dir = sys.argv[2]
+except IndexError:
+    structures_dir = os.getenv('STRUCTURES_DIR', 'examples/basic/test_structures')
+
 
 DATA = pd.read_csv(
     data_file)
