@@ -1,1 +1,1 @@
-web: gunicorn mol_view:server
+web: gunicorn 'app:create_server()' 
