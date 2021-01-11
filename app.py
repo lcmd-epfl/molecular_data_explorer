@@ -60,7 +60,7 @@ def xyz_to_json(mol):
 
 
 
-def create_app(data_file='examples/basic/data_test.csv', structures_dir='examples/basic/test_structures'):
+def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_dir='examples/blaskovits2021_example/structures'):
 
     DATA = pd.read_csv(
         data_file)
