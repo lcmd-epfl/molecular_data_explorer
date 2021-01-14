@@ -717,7 +717,7 @@ def tab_content(active_tab, memory):
                 'zoom': 0.06,
                 'resolution': 450,
                 # 'ao': 0.1,
-                # 'outline': 1,
+                'outline': 0.00001,
                 'atomScale': 0.15,
                 'relativeAtomScale': 0.33,
                 'bonds': True
