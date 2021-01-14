@@ -646,7 +646,7 @@ def create_app():
                                  '''**&Omega;<sup>T<sub>1</sub></sup><sub>D&#8594;A</sub>**: {0:.3f}&emsp;'''.format(pdata[
                                      'T1DtoA']),
                                  '''**&Omega;<sup>T<sub>1</sub></sup><sub>D&#8594;D</sub>**: {0:.3f}'''.format(pdata[
-                                     'S1DtoD']),
+                                     'T1DtoD']),
                              ], style={"margin-bottom": "-12pt", "fontsize": "10%"}),
                 dcc.Markdown(dangerously_allow_html=True,
                              children=[
