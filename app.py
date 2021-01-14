@@ -272,7 +272,8 @@ def create_app():
             dbc.Col(
                 dbc.Select(
                     id="selectColor",
-                    options=select_x_options,
+                    options=[xx for xx in select_x_options if pd.to_numeric(
+                        DATA[xx['label']], errors='coerce').notnull().all()],
                     value='S1_T1_split'
                 ), width=7
             )
@@ -496,8 +497,10 @@ def create_app():
             color_column_data = DATA[color_column]
             ccd_min = color_column_data.min()
             ccd_max = color_column_data.max()
-            if not pd.to_numeric(color_column_data, errors='coerce').notnull().all():
-                color_column_data = None
+            # if pd.to_numeric(color_column_data, errors='coerce').notnull().all():
+            #     color_column_data = None
+            #     ccd_min = None
+            #     ccd_max = None
 
             if z_column == 'None':
 
