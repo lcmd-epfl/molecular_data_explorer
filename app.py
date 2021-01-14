@@ -64,7 +64,6 @@ def create_app():
     DATA = pd.read_csv(
         './blaskovits2021_example/data.csv')
 
-
     DATA = DATA.round(5)
     DATA['id'] = list(DATA.index)
     info_dict = [
@@ -174,7 +173,8 @@ def create_app():
         ''', dangerously_allow_html=True, style={"margin-bottom": "-12pt", "fontsize": "10%"}), dcc.Link(
         href='https://chemrxiv.org/articles/preprint/Identifying_the_Trade-off_between_Intramolecular_Singlet_Fission_Requirements_in_Donor-Acceptor_Copolymers/13333475/1',
         target='https://chemrxiv.org/articles/preprint/Identifying_the_Trade-off_between_Intramolecular_Singlet_Fission_Requirements_in_Donor-Acceptor_Copolymers/13333475/1',
-        children=['Identifying the Trade-off between Intramolecular Singlet Fission Requirements in Donor-Acceptor Copolymers', ],
+        children=[
+            'Identifying the Trade-off between Intramolecular Singlet Fission Requirements in Donor-Acceptor Copolymers', ],
         refresh=False,
         style={"margin-bottom": "25pt"},),
         dcc.Markdown(dangerously_allow_html=True,
@@ -355,7 +355,8 @@ def create_app():
                         min=0.01,
                         max=2,
                         value=0.5,
-                        handleLabel={"showCurrentValue": False, "label": "Scale"},
+                        handleLabel={
+                            "showCurrentValue": False, "label": "Scale"},
                         step=0.02,
                         id="size_scaler"
                     )
@@ -410,7 +411,6 @@ def create_app():
             ])
         ], id="container")
     ])
-
 
     @app.callback(
         [
@@ -492,14 +492,23 @@ def create_app():
                 ccc[0], ccc[1], ccc[2])] for ttt, ccc in zip(tiks[1:-1], colors)]
 
         if x_column and y_column and color_column:
+
+            color_column_data = DATA[color_column]
+            ccd_min = color_column_data.min()
+            ccd_max = color_column_data.max()
+            if not pd.to_numeric(color_column_data, errors='coerce').notnull().all():
+                color_column_data = None
+
             if z_column == 'None':
+
                 fig = px.scatter(
                     DATA, x=x_column, y=y_column, color=color_column,
                     color_continuous_scale=color_values if colormap_column == 'Discrete' else colormap_column,
-                    range_color=[DATA[color_column].min(),
-                                 DATA[color_column].max()] if color_column != 'S1_T1_split' else [-2.5, 0.5],
+                    range_color=[ccd_min,
+                                 ccd_max] if color_column != 'S1_T1_split' else [-2.5, 0.5],
                     opacity=0.8,
-                    hover_data={x_column: True, y_column: True, color_column: True}
+                    hover_data={x_column: True,
+                                y_column: True, color_column: True}
                 )
                 fig.update_layout(clickmode='event+select')
 
@@ -524,8 +533,8 @@ def create_app():
                     DATA, x=x_column, y=y_column, z=z_column, color=color_column,
                     opacity=1,
                     color_continuous_scale=color_values if colormap_column == 'Discrete' else colormap_column,
-                    range_color=[DATA[color_column].min(),
-                                 DATA[color_column].max()] if color_column != 'S1_T1_split' else [-2.5, 0.5],
+                    range_color=[ccd_min,
+                                 ccd_max] if color_column != 'S1_T1_split' else [-2.5, 0.5],
                     hover_data={x_column, y_column, color_column}
                 )
                 fig.update_layout(clickmode='event+select')
@@ -552,7 +561,6 @@ def create_app():
         return [
             scatter_children
         ]
-
 
     @app.callback(
         [
@@ -589,7 +597,6 @@ def create_app():
                     ]
                     }]
 
-
     @app.callback(
         [
             Output("detailsContainer", "children"),
@@ -608,10 +615,12 @@ def create_app():
             cdata = click_data["points"][0]
             if "pointIndex" in cdata.keys():
                 memory["point"] = click_data["points"][0]["pointIndex"]
-                pdata = DATA.iloc[click_data["points"][0]["pointIndex"]].to_dict()
+                pdata = DATA.iloc[click_data["points"]
+                                  [0]["pointIndex"]].to_dict()
             else:
                 memory["point"] = click_data["points"][0]["pointNumber"]
-                pdata = DATA.iloc[click_data["points"][0]["pointNumber"]].to_dict()
+                pdata = DATA.iloc[click_data["points"]
+                                  [0]["pointNumber"]].to_dict()
 
             details = [
                 dcc.Markdown(dangerously_allow_html=True,
@@ -724,7 +733,6 @@ def create_app():
             details, vis_tabs, memory
         ]
 
-
     @app.callback(
         Output("vis-content", "children"),
         [
@@ -766,7 +774,6 @@ def create_app():
             mol_plot = html.Img(src=svg, style={'width': '100%'})
         return mol_plot
 
-
     @app.callback(
         Output("modal", "is_open"),
         [Input("open", "n_clicks"), Input("close", "n_clicks")],
@@ -776,7 +783,6 @@ def create_app():
         if n1 or n2:
             return not is_open
         return is_open
-
 
     @app.callback(
         [
@@ -839,7 +845,6 @@ def create_app():
             button_text = "Show data table"
 
         return [children, button_text]
-
 
     @app.callback(
         [
