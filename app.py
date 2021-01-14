@@ -59,32 +59,137 @@ def xyz_to_json(mol):
     return data
 
 
-
-def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_dir='examples/blaskovits2021_example/structures'):
+def create_app(data_file='blaskovits2021_example/data.csv',
+               structures_dir='blaskovits2021_example/structures'):
 
     DATA = pd.read_csv(
-        data_file)
+        './data.csv')
 
+
+    DATA = DATA.round(5)
     DATA['id'] = list(DATA.index)
-    # DATA = DATA.round(6)
+    info_dict = [
+        dcc.Markdown(dangerously_allow_html=True,
+                     children=[
+                         '''**Compound index**: COMP_names'''],
+                     style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+        dcc.Markdown(dangerously_allow_html=True,
+                     children=[
+                         '''**S1<sub>exc</sub>**: S1_exc &emsp;&emsp;''',
+                         '''&emsp; **T1<sub>exc</sub>**: T1_exc eV&emsp;&emsp;''',
+                         '''**&Delta;E<sub>ST</sub>**: S1_T1_split'''],
+                     style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+        dcc.Markdown(dangerously_allow_html=True,
+                     children=[
+                         '''**&Omega;<sup>S<sub>1</sub></sup><sub>A&#8594;A</sub>**: S1AtoA&emsp;''',
+                         '''**&Omega;<sup>S<sub>1</sub></sup><sub>A&#8594;D</sub>**: S1AtoD&emsp;''',
+                         '''**&Omega;<sup>S<sub>1</sub></sup><sub>D&#8594;A</sub>**: S1DtoA&emsp;''',
+                         '''**&Omega;<sup>S<sub>1</sub></sup><sub>D&#8594;D</sub>**: S1DtoD''',
+                     ], style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+        dcc.Markdown(dangerously_allow_html=True,
+                     children=[
+                         '''**&Omega;<sup>T<sub>1</sub></sup><sub>A&#8594;A</sub>**: T1AtoA&emsp;''',
+                         '''**&Omega;<sup>T<sub>1</sub></sup><sub>A&#8594;D</sub>**: T1AtoD&emsp;''',
+                         '''**&Omega;<sup>T<sub>1</sub></sup><sub>D&#8594;A</sub>**: T1DtoA&emsp;''',
+                         '''**&Omega;<sup>T<sub>1</sub></sup><sub>D&#8594;D</sub>**: T1DtoD''',
+                     ], style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+        dcc.Markdown(dangerously_allow_html=True,
+                     children=[
+                         '''**D<sub>HOMO</sub> **: D_HOMO &emsp;&emsp;''',
+                         '''**D<sub>LUMO</sub> **: D_LUMO &emsp;&emsp;''',
+                         '''**D<sub>GAP</sub> **: D_GAP''',
 
-    # dtypes = DATA.dtypes
+                     ],
+                     style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+        dcc.Markdown(dangerously_allow_html=True,
+                     children=[
+                         '''**A<sub>HOMO</sub> **: A_HOMO &emsp;&emsp;''',
+                         '''**A<sub>LUMO</sub> **: A_LUMO &emsp;&emsp;''',
+                         '''**A<sub>GAP</sub> **: A_gap ''',
 
-    # # round floats to N significant decimals
-    # N = 4
-    # for i, col in enumerate(DATA.columns):
-    #     if dtypes[i] == float:
-    #         DATA[col] = DATA[col].apply(lambda x: np.round(x, N - int(np.floor(np.log10(abs(x))))))
+                     ],
+                     style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+        dcc.Markdown(dangerously_allow_html=True,
+                     children=[
+                         '''**D<sub>S1</sub> **: D_S1 &emsp;&emsp;''',
+                         '''**D<sub>T1</sub> **: D_T1 &emsp;&emsp;''',
+                         '''**D(&Delta;E<sub>ST</sub>) **: D_split''',
 
-    # pd.options.display.float_format = '${:.2f}'.format
+                     ],
+                     style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+        dcc.Markdown(dangerously_allow_html=True,
+                     children=[
+                         '''**A<sub>S1</sub> **: A_S1 &emsp;&emsp;''',
+                         '''**A<sub>T1</sub> **: A_T1 &emsp;&emsp;''',
+                         '''**A(&Delta;E<sub>ST</sub>) **: A_split''',
+
+                     ],
+                     style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+        dcc.Markdown(dangerously_allow_html=True,
+                     children=[
+                         '''**&phi;<sub>D-A</sub>**: dft_dihedral_norm''',
+                     ],
+                     style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+        html.P([html.Strong("SMILES: "), "SMILES"],
+               style={"margin-bottom": "10pt"}),
+        dcc.Markdown(dangerously_allow_html=True,
+                     children=[
+                         '''*All energy values are reported in eV*''',
+                     ],
+                     style={"margin-bottom": "-12pt", "fontsize": "10%", "text-align": "center"},),
+
+    ]
 
     info_text = [dcc.Markdown('''
         # App instructions
-        - Click once in the scatter plot to select a point and see the corresponding molecular structure, click twice to deselect it.
-        - Select a row in the data table to see the corresponding molecular structure.
+        - Click once to select a point, click twice to deselect it.
         - Change datapoint size with the sliding scale below the plot.
-        - Select atoms in the 2D view to compute distances, angles and dihedrals of the corresponding 3D geometry.
-        ''')]
+        - **Details**-labels dictionary:
+        '''),
+                 dbc.CardBody(info_dict,
+                              id="information_card",
+                              className="mb-3",
+                              style={
+                                  "max-height": "230pt",
+                                  "width": "800px",
+                                  "border": "1pt solid #d5d5d5",
+                                  "border-radius": "10pt",
+                                  "margin": "auto",
+                                  "overflow-y": "auto",
+                                  "overflow-x": "auto",
+                              }
+                              ),
+                 dcc.Markdown('''
+        # Data generation details:
+
+        - 3D structures and molecular properties are obtained from DFT-optimized geometries    (wB97XD/6-31G*)
+        - Singlet-triplet splitting &Delta;E<sub>ST</sub> is calculated as follows: &Delta;E<sub>ST</sub> = E(S<sub>1</sub>) - 2E(T<sub>1</sub>)
+        - The character of the excited states are evaluated using the charge transfer numbers (&Omega;<sup>E</sup><sub>i&#8594;j</sub>) gathered
+        from the transition density matrices of a given excited state E, which express the
+        accumulation of hole and electron density on molecular fragments *i* and *j*, respectively.
+        Here,   the dimer is partitioned into the donor (D) and acceptor (A) fragments.
+        - The dihedral formed between the donor and acceptor cores in the dimer (&phi;<sub>D-A</sub>) is to be between 0° and 90&deg;.
+        - Computational data for each dimer can be found in the directory labelled with that compound’s index in the Materials Cloud archive.
+
+        Please see the paper for further details:
+        ''', dangerously_allow_html=True, style={"margin-bottom": "-12pt", "fontsize": "10%"}), dcc.Link(
+        href='https://chemrxiv.org/articles/preprint/Identifying_the_Trade-off_between_Intramolecular_Singlet_Fission_Requirements_in_Donor-Acceptor_Copolymers/13333475/1',
+        target='https://chemrxiv.org/articles/preprint/Identifying_the_Trade-off_between_Intramolecular_Singlet_Fission_Requirements_in_Donor-Acceptor_Copolymers/13333475/1',
+        children=['Identifying the Trade-off between Intramolecular Singlet Fission Requirements in Donor-Acceptor Copolymers', ],
+        refresh=False,
+        style={"margin-bottom": "25pt"},),
+        dcc.Markdown(dangerously_allow_html=True,
+                     children=[
+                         '''The app was built using :''',
+                     ],
+                     style={"margin-bottom": "-12pt", "fontsize": "10%"},),
+        dcc.Link(
+        href='https://github.com/lcmd-epfl/molecular_data_explorer',
+        target='https://github.com/lcmd-epfl/molecular_data_explorer',
+        children=['Molecular Data Explorer', ],
+        refresh=False,
+    )
+    ]
 
     external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -94,49 +199,49 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
         suppress_callback_exceptions=True)
 
     select_x_options = [
-        {'label': column, 'value': column}
+        {"label": column, "value": column}
         for column in DATA.columns
     ]
     select_z_options = [
-        {'label': column, 'value': column}
+        {"label": column, "value": column}
         for column in ['None'] + list(DATA.columns)
     ]
 
     select_colormap_options = [{'label': val, 'value': val} for val in ['Viridis', 'Hot', 'Inferno', 'Jet',
-                                                                        'Rainbow', 'RdBu']]
+                                                                        'Rainbow', 'RdBu', 'Discrete']]
     x_selection = dbc.FormGroup(
         [
-            dbc.Col(dbc.Label('Select X'), style={
-                    'text-align': 'right'}, width=5),
+            dbc.Col(dbc.Label("Select X"), style={
+                    "text-align": "right"}, width=5),
             dbc.Col(
                 dbc.Select(
-                    id='selectX',
+                    id="selectX",
                     options=select_x_options,
-                    value=DATA.columns[0]
+                    value='S1DtoA'
                 ), width=7
             )
         ], row=True
     )
     y_selection = dbc.FormGroup(
         [
-            dbc.Col(dbc.Label('Select Y'), style={
-                    'text-align': 'right'}, width=5),
+            dbc.Col(dbc.Label("Select Y"), style={
+                    "text-align": "right"}, width=5),
             dbc.Col(
                 dbc.Select(
-                    id='selectY',
+                    id="selectY",
                     options=select_x_options,
-                    value=DATA.columns[1]
+                    value='T1AtoA'
                 ), width=7
             )
         ], row=True
     )
     z_selection = dbc.FormGroup(
         [
-            dbc.Col(dbc.Label('Select Z'), style={
-                    'text-align': 'right'}, width=5),
+            dbc.Col(dbc.Label("Select Z"), style={
+                    "text-align": "right"}, width=5),
             dbc.Col(
                 dbc.Select(
-                    id='selectZ',
+                    id="selectZ",
                     options=select_z_options,
                     value='None'
                 ), width=7
@@ -145,16 +250,16 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
     )
 
     select_size_options = [
-        {'label': column, 'value': column}
+        {"label": column, "value": column}
         for column in ['Fix value'] + list(DATA.columns)
     ]
     size_selection = dbc.FormGroup(
         [
-            dbc.Col(dbc.Label('Size'), style={
-                    'text-align': 'right'}, width=5),
+            dbc.Col(dbc.Label("Size"), style={
+                    "text-align": "right"}, width=5),
             dbc.Col(
                 dbc.Select(
-                    id='selectSize',
+                    id="selectSize",
                     options=select_size_options,
                     value='Fix value'
                 ), width=7
@@ -163,26 +268,26 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
     )
     color_selection = dbc.FormGroup(
         [
-            dbc.Col(dbc.Label('Select color'), style={
-                    'text-align': 'right'}, width=5),
+            dbc.Col(dbc.Label("Select color"), style={
+                    "text-align": "right"}, width=5),
             dbc.Col(
                 dbc.Select(
-                    id='selectColor',
+                    id="selectColor",
                     options=select_x_options,
-                    value=DATA.columns[3]
+                    value='S1_T1_split'
                 ), width=7
             )
         ], row=True
     )
     colormap_selection = dbc.FormGroup(
         [
-            dbc.Col(dbc.Label('Color scale'), style={
-                    'text-align': 'right'}, width=5),
+            dbc.Col(dbc.Label("Color scale"), style={
+                    "text-align": "right"}, width=5),
             dbc.Col(
                 dbc.Select(
-                    id='selectColorMap',
+                    id="selectColorMap",
                     options=select_colormap_options,
-                    value='Viridis'
+                    value='Discrete'
                 ), width=7
             )
         ], row=True
@@ -192,144 +297,144 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
         # html.Div(id='JmolDiv'),
         dcc.Store(id='memory'),
         html.H1(
-            children='Molecular data explorer',
+            children='Donor-Acceptor Systems for Intramolecular Singlet Fission',
             style={
-                'margin-left': '10pt',
-                'margin-top': '10pt',
-                'text-align': 'center',
-                'margin-bottom': '0pt'
+                "margin-left": "10pt",
+                "margin-top": "10pt",
+                "text-align": "center",
+                "margin-bottom": "0pt"
             }),
         html.Div([
             dbc.Row([
                 dbc.Col([
                     dbc.Button(
-                        'Show data table', id='showTable', color='primary',
-                        className='mr-1', style={'margin-bottom': '10pt'}),
+                        "Show data table", id="showTable", color="primary",
+                        className="mr-1", style={"margin-bottom": "10pt"}),
                     html.Div(
                         [
-                            dbc.Button('Information', id='open',
-                                       style={'margin-bottom': '10pt'}),
+                            dbc.Button("Information", id="open",
+                                       style={"margin-bottom": "10pt"}),
                             dbc.Modal(
                                 [
-                                    dbc.ModalHeader('Information'),
+                                    dbc.ModalHeader("Information"),
                                     dbc.ModalBody(info_text, style={'padding-left': '50pt',
                                                                     'padding-right': '50pt'}),
                                     dbc.ModalFooter(
-                                        dbc.Button('Close', id='close',
-                                                   className='ml-auto')
+                                        dbc.Button("Close", id="close",
+                                                   className="ml-auto")
                                     ),
                                 ],
-                                id='modal', size='xl',
+                                id="modal", size="xl",
                             ),
                         ], style={'display': 'inline'}
                     ),
                     html.Div(
-                        id='tableContainer',
+                        id="tableContainer",
                         style={
-                            'overflow-x': 'auto',
-                            'border': '1pt solid #d5d5d5',
-                            'border-radius': '10pt',
+                            "overflow-x": "auto",
+                            "border": "1pt solid #d5d5d5",
+                            "border-radius": "10pt",
                         }
                     ),
                 ], width=12)
-            ], style={'padding': '40pt', 'padding-top': '0pt', 'padding-bottom': '0pt'}),
+            ], style={"padding": "40pt", "padding-top": "0pt", "padding-bottom": "0pt"}),
             dbc.Row([
                 dbc.Col([
-                    dbc.Row(id='scatterContainer', style={
-                            'padding': '40pt', 'padding-top': '0pt'}),
+                    dbc.Row(id="scatterContainer", style={
+                            "padding": "40pt", "padding-top": "0pt"}),
                     dbc.Row([
                         dbc.Col(x_selection, width=4),
                         dbc.Col(y_selection, width=4),
                         dbc.Col(z_selection, width=4)
-                    ], style={'padding-left': '40pt', 'padding-right': '40pt'}),
+                    ], style={"padding-left": "40pt", "padding-right": "40pt"}),
                     dbc.Row([
                         dbc.Col(size_selection, width=4),
                         dbc.Col(color_selection, width=4),
                         dbc.Col(colormap_selection, width=4)
-                    ], style={'padding-left': '40pt', 'padding-right': '40pt'}),
+                    ], style={"padding-left": "40pt", "padding-right": "40pt"}),
                     dbc.Row([daq.Slider(
                         min=0.01,
                         max=2,
                         value=0.5,
-                        handleLabel={'showCurrentValue': False, 'label': 'Scale'},
+                        handleLabel={"showCurrentValue": False, "label": "Scale"},
                         step=0.02,
-                        id='size_scaler'
+                        id="size_scaler"
                     )
-                    ], style={'padding-left': '80pt', 'padding-right': '40pt', 'padding-top': '10pt'})
-                ], width=6, style={'padding': '10pt'}),
+                    ], style={"padding-left": "80pt", "padding-right": "40pt", "padding-top": "10pt"})
+                ], width=6, style={"padding": "10pt"}),
                 dbc.Col([
                     dbc.Row([
                         dbc.Card([
                             html.H4(
-                                'Details',
-                                className='card-title',
-                                style={'margin': 'auto', 'margin-bottom': '5pt', 'margin-top': '5pt'}),
+                                "Details",
+                                className="card-title",
+                                style={"margin": "auto", "margin-bottom": "5pt", "margin-top": "5pt"}),
                             dbc.CardBody(
                                 [
                                     html.P(
-                                        'Select a datapoint to display the details')
+                                        "Select a datapoint to display the details")
                                 ],
-                                id='detailsContainer',
-                                className='mb-3',
+                                id="detailsContainer",
+                                className="mb-3",
                                 style={
-                                    'max-height': '200pt',
-                                    'width': '800px',
-                                    'border': '1pt solid #d5d5d5',
-                                    'border-radius': '10pt',
-                                    'margin': 'auto',
-                                    'overflow-y': 'auto',
-                                    'overflow-x': 'auto',
+                                    "max-height": "200pt",
+                                    "width": "800px",
+                                    "border": "1pt solid #d5d5d5",
+                                    "border-radius": "10pt",
+                                    "margin": "auto",
+                                    "overflow-y": "auto",
+                                    "overflow-x": "auto",
                                 }
                             ),
                             html.H4(
-                                'Molecular view',
-                                className='card-title',
-                                style={'margin': 'auto', 'margin-bottom': '5pt'}),
+                                "Molecular view",
+                                className="card-title",
+                                style={"margin": "auto", "margin-bottom": "5pt"}),
                             dbc.CardBody(children=[
                                 html.P(
-                                    'Select a datapoint to view a molecule')
+                                    "Select a datapoint to view a molecule")
                             ],
-                                id='moleculeContainer',
-                                className='mb-3',
+                                id="moleculeContainer",
+                                className="mb-3",
                                 style={
-                                    # 'max-width': '100%',
-                                    'overflow-x': 'auto',
-                                    'width': '494px',
-                                    'border': '1pt solid #d5d5d5',
-                                    'border-radius': '10pt',
-                                    'margin': 'auto'
+                                    # "max-width": "100%",
+                                    "overflow-x": "auto",
+                                    "width": "494px",
+                                    "border": "1pt solid #d5d5d5",
+                                    "border-radius": "10pt",
+                                    "margin": "auto"
                             }
                             ),
-                        ], style={'width': '100%', 'margin-right': '60pt', 'border': '0pt'}),
+                        ], style={"width": "100%", "margin-right": "60pt", "border": "0pt"}),
                     ]),
                 ], width=6)
             ])
-        ], id='container')
+        ], id="container")
     ])
 
 
     @app.callback(
         [
-            Output('scatterContainer', 'children')
+            Output("scatterContainer", "children")
         ],
         [
-            Input('selectX', 'value'),
-            Input('selectY', 'value'),
-            Input('selectZ', 'value'),
-            Input('selectSize', 'value'),
-            Input('selectColor', 'value'),
-            Input('selectColorMap', 'value'),
-            Input('size_scaler', 'value'),
+            Input("selectX", "value"),
+            Input("selectY", "value"),
+            Input("selectZ", "value"),
+            Input("selectSize", "value"),
+            Input("selectColor", "value"),
+            Input("selectColorMap", "value"),
+            Input("size_scaler", "value"),
 
         ],
         [
-            State('selectX', 'value'),
-            State('selectY', 'value'),
-            State('selectZ', 'value'),
-            State('selectSize', 'value'),
-            State('selectColor', 'value'),
-            State('selectColorMap', 'value'),
-            State('size_scaler', 'value'),
+            State("selectX", "value"),
+            State("selectY", "value"),
+            State("selectZ", "value"),
+            State("selectSize", "value"),
+            State("selectColor", "value"),
+            State("selectColorMap", "value"),
+            State("size_scaler", "value"),
         ]
 
     )
@@ -345,19 +450,19 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
         else:
             button_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-        if button_id == 'selectX':
+        if button_id == "selectX":
             x_column = input_x_column
-        elif button_id == 'selectY':
+        elif button_id == "selectY":
             y_column = input_y_column
-        elif button_id == 'selectZ':
+        elif button_id == "selectZ":
             z_column = input_z_column
-        elif button_id == 'selectSize':
+        elif button_id == "selectSize":
             size_column = input_size_column
-        elif button_id == 'selectColor':
+        elif button_id == "selectColor":
             color_column = input_color_column
-        elif button_id == 'selectColorMap':
+        elif button_id == "selectColorMap":
             colormap_column = input_colormap
-        elif button_id == 'size_scale':
+        elif button_id == "size_scale":
             size_scale = input_size_scale
         if size_column != 'Fix value':
             size_data = DATA[size_column].values.copy()
@@ -366,12 +471,34 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
             size_data *= size_scale
         else:
             size_data = np.ones(len(DATA))
+        if colormap_column == 'Discrete':
+            c1 = np.round(
+                np.array([0.75361062, 0.83023285, 0.96087116, 1.]) * 255, 0).astype(int)
+            c2 = np.round(
+                np.array([0.61931795, 0.74412073, 0.99893092, 1.]) * 255, 0).astype(int)
+            c3 = np.round(
+                np.array([0.34832334, 0.46571115, 0.88834616, 1.]) * 255, 0).astype(int)
+            c4 = np.round(
+                np.array([0.70567316, 0.01555616, 0.15023281, 1.]) * 255, 0).astype(int)
+            c5 = np.round(
+                np.array([0.83936494, 0.32185622, 0.26492398, 1.]) * 255, 0).astype(int)
+            c6 = np.round(
+                np.array([0.96849975, 0.67397738, 0.55664926, 1.]) * 255, 0).astype(int)
+
+            colors = [c1, c2, c3, c4, c5, c6]
+            colors = sum([[ccc] * 2 for ccc in colors], [])
+            n_bins = 7
+            tiks = sum([[ccc] * 2 for ccc in np.linspace(0, 1, n_bins)], [])
+            color_values = [[ttt, "rgb({},{},{})".format(
+                ccc[0], ccc[1], ccc[2])] for ttt, ccc in zip(tiks[1:-1], colors)]
 
         if x_column and y_column and color_column:
             if z_column == 'None':
                 fig = px.scatter(
                     DATA, x=x_column, y=y_column, color=color_column,
-                    color_continuous_scale=colormap_column,
+                    color_continuous_scale=color_values if colormap_column == 'Discrete' else colormap_column,
+                    range_color=[DATA[color_column].min(),
+                                 DATA[color_column].max()] if color_column != 'S1_T1_split' else [-2.5, 0.5],
                     opacity=0.8,
                     hover_data={x_column: True, y_column: True, color_column: True}
                 )
@@ -390,14 +517,16 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
                 scatter_children = dcc.Graph(
                     id='mainScatter',
                     figure=fig,
-                    style={'height': '500pt', 'width': '100%'},
-                    config={'scrollZoom': True},
+                    style={"height": "500pt", "width": "100%"},
+                    config={"scrollZoom": True},
                 ),
             else:
                 fig = px.scatter_3d(
                     DATA, x=x_column, y=y_column, z=z_column, color=color_column,
                     opacity=1,
-                    color_continuous_scale=colormap_column,
+                    color_continuous_scale=color_values if colormap_column == 'Discrete' else colormap_column,
+                    range_color=[DATA[color_column].min(),
+                                 DATA[color_column].max()] if color_column != 'S1_T1_split' else [-2.5, 0.5],
                     hover_data={x_column, y_column, color_column}
                 )
                 fig.update_layout(clickmode='event+select')
@@ -415,12 +544,12 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
                 scatter_children = dcc.Graph(
                     id='mainScatter',
                     figure=fig,
-                    style={'height': '500pt', 'width': '100%'},
-                    config={'scrollZoom': True},
+                    style={"height": "500pt", "width": "100%"},
+                    config={"scrollZoom": True},
                 )
         else:
             scatter_children = html.P(
-                'Select X, Y and color columns to display the plot')
+                "Select X, Y and color columns to display the plot")
         return [
             scatter_children
         ]
@@ -464,59 +593,130 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
 
     @app.callback(
         [
-            Output('detailsContainer', 'children'),
-            Output('moleculeContainer', 'children'),
-            Output('memory', 'data')
+            Output("detailsContainer", "children"),
+            Output("moleculeContainer", "children"),
+            Output("memory", "data")
         ],
         [
-            Input('mainScatter', 'clickData'),
+            Input("mainScatter", "clickData"),
         ]
     )
     def update_point_details(click_data):
-
         memory = {}
-        details = html.P('Click on a point to see the details')
-        vis_tabs = html.P('Click on a point to see the 3D molecular structure')
+        details = html.P("Click on a point to see the details")
+        vis_tabs = html.P("Click on a point to see the 3D molecular structure")
         if click_data:
-            cdata = click_data['points'][0]
-            if 'pointIndex' in cdata.keys():
-                memory['point'] = click_data['points'][0]['pointIndex']
-                pdata = DATA.iloc[click_data['points'][0]['pointIndex']].to_dict()
+            cdata = click_data["points"][0]
+            if "pointIndex" in cdata.keys():
+                memory["point"] = click_data["points"][0]["pointIndex"]
+                pdata = DATA.iloc[click_data["points"][0]["pointIndex"]].to_dict()
             else:
-                memory['point'] = click_data['points'][0]['pointNumber']
-                pdata = DATA.iloc[click_data['points'][0]['pointNumber']].to_dict()
+                memory["point"] = click_data["points"][0]["pointNumber"]
+                pdata = DATA.iloc[click_data["points"][0]["pointNumber"]].to_dict()
 
             details = [
-                html.P([html.Strong('{}: '.format(col)),
-                        '{}'.format('{:.2E}'.format(pdata[col]) if isinstance(
-                            pdata[col], float) else pdata[col])],
-                       style={'margin-bottom': '0pt'})
-                for col in DATA.columns
+                dcc.Markdown(dangerously_allow_html=True,
+                             children=[
+                                 '''**Compound index**: {}'''.format(pdata['COMP_names'])],
+                             style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+                dcc.Markdown(dangerously_allow_html=True,
+                             children=[
+                                 '''**S1<sub>exc</sub>**: {0:.3f} eV &emsp;&emsp;'''.format(pdata[
+                                     'S1_exc']),
+                                 '''&emsp; **T1<sub>exc</sub>**: {0:.3f} eV&emsp;&emsp;'''.format(pdata[
+                                     'T1_exc']),
+                                 '''**&Delta;E<sub>ST</sub>**: {0:.3f} eV'''.format(pdata['S1_T1_split'])],
+                             style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+                dcc.Markdown(dangerously_allow_html=True,
+                             children=[
+                                 '''**&Omega;<sup>S<sub>1</sub></sup><sub>A&#8594;A</sub>**: {0:.3f}&emsp;'''.format(pdata[
+                                     'S1AtoA']),
+                                 '''**&Omega;<sup>S<sub>1</sub></sup><sub>A&#8594;D</sub>**: {0:.3f}&emsp;'''.format(pdata[
+                                     'S1AtoD']),
+                                 '''**&Omega;<sup>S<sub>1</sub></sup><sub>D&#8594;A</sub>**: {0:.3f}&emsp;'''.format(pdata[
+                                     'S1DtoA']),
+                                 '''**&Omega;<sup>S<sub>1</sub></sup><sub>D&#8594;D</sub>**: {0:.3f}'''.format(pdata[
+                                     'S1DtoD']),
+                             ], style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+                dcc.Markdown(dangerously_allow_html=True,
+                             children=[
+                                 '''**&Omega;<sup>T<sub>1</sub></sup><sub>A&#8594;A</sub>**: {0:.3f}&emsp;'''.format(pdata[
+                                     'T1AtoA']),
+                                 '''**&Omega;<sup>T<sub>1</sub></sup><sub>A&#8594;D</sub>**: {0:.3f}&emsp;'''.format(pdata[
+                                     'T1AtoD']),
+                                 '''**&Omega;<sup>T<sub>1</sub></sup><sub>D&#8594;A</sub>**: {0:.3f}&emsp;'''.format(pdata[
+                                     'T1DtoA']),
+                                 '''**&Omega;<sup>T<sub>1</sub></sup><sub>D&#8594;D</sub>**: {0:.3f}'''.format(pdata[
+                                     'S1DtoD']),
+                             ], style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+                dcc.Markdown(dangerously_allow_html=True,
+                             children=[
+                                 '''**D<sub>HOMO</sub> **: {0:.3f} eV &emsp;&emsp;'''.format(
+                                     pdata['D_HOMO']),
+                                 '''**D<sub>LUMO</sub> **: {0:.3f} eV &emsp;&emsp;'''.format(
+                                     pdata['D_LUMO']),
+                                 '''**D<sub>GAP</sub> **: {0:.3f} eV'''.format(
+                                     pdata['D_gap']),
+
+                             ],
+                             style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+                dcc.Markdown(dangerously_allow_html=True,
+                             children=[
+                                 '''**A<sub>HOMO</sub> **: {0:.3f} eV &emsp;&emsp;'''.format(
+                                     pdata['A_HOMO']),
+                                 '''**A<sub>LUMO</sub> **: {0:.3f} eV &emsp;&emsp;'''.format(
+                                     pdata['A_LUMO']),
+                                 '''**A<sub>GAP</sub> **: {0:.3f} eV'''.format(
+                                     pdata['A_gap']),
+
+                             ],
+                             style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+                dcc.Markdown(dangerously_allow_html=True,
+                             children=[
+                                 '''**D<sub>S1</sub> **: {0:.3f} eV &emsp;&emsp;'''.format(pdata[
+                                     'D_S1']),
+                                 '''**D<sub>T1</sub> **: {0:.3f} eV &emsp;&emsp;'''.format(pdata[
+                                     'D_T1']),
+                                 '''**D(&Delta;E<sub>ST</sub>)**: {0:.3f} eV'''.format(
+                                     pdata['D_split']),
+
+                             ],
+                             style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+                dcc.Markdown(dangerously_allow_html=True,
+                             children=[
+                                 '''**A<sub>S1</sub> **: {0:.3f} eV &emsp;&emsp;'''.format(pdata[
+                                     'A_S1']),
+                                 '''**A<sub>T1</sub> **: {0:.3f} eV &emsp;&emsp;'''.format(pdata[
+                                     'A_T1']),
+                                 '''**A(&Delta;E<sub>ST</sub>)**: {0:.3f} eV'''.format(
+                                     pdata['A_split']),
+
+                             ],
+                             style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+                dcc.Markdown(dangerously_allow_html=True,
+                             children=[
+                                 '''**&phi;<sub>D-A</sub>**: {0:.3f}&deg; '''.format(
+                                     pdata['dft_dihedral_norm']),
+                             ],
+                             style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+                html.P([html.Strong("SMILES: "), "{}".format(
+                    pdata['SMILES'])], style={"margin-bottom": "0pt"}),
             ]
-            # details = [dcc.Markdown(dangerously_allow_html=True,
-            #                         children=[
-            #                             '''**{}**: {}'''.format(col, ],
-            #                         style={'margin-bottom': '-12pt',
-            #                                'fontsize': '10%'}) for col in DATA.columns]
-            # details = [
-            #     html.P('{}: {}'.format(k, v), style={'margin-bottom': '0pt'})
-            #     for k, v in DATA.iloc[
-            #         click_data['points'][0]['pointIndex']].to_dict().items()]
 
             vis_tabs = dbc.Card(
                 [
                     dbc.CardHeader(
                         dbc.Tabs(
                             [
-                                dbc.Tab(label='2D', tab_id='tab-2d'),
-                                dbc.Tab(label='3D', tab_id='tab-speck'),
+                                dbc.Tab(label="2D", tab_id="tab-jmol"),
+                                dbc.Tab(label="3D", tab_id="tab-speck"),
                             ],
-                            id='vis-tabs',
+                            id="vis-tabs",
                             card=True,
-                            active_tab='tab-speck',
+                            active_tab="tab-speck",
                         )
                     ),
-                    dbc.CardBody(id='vis-content', style={'padding': 0}),
+                    dbc.CardBody(id="vis-content", style={"padding": 0}),
                 ]
             )
 
@@ -527,20 +727,20 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
 
 
     @app.callback(
-        Output('vis-content', 'children'),
+        Output("vis-content", "children"),
         [
-            Input('vis-tabs', 'active_tab')
+            Input("vis-tabs", "active_tab")
         ],
-        State('memory', 'data')
+        State("memory", "data")
     )
     def tab_content(active_tab, memory):
-        if 'point' not in memory:
+        if "point" not in memory:
             raise PreventUpdate
 
-        mol_name = DATA.iloc[memory['point']].xyz_file_name
-        path = structures_dir + '/' + mol_name
+        mol_name = DATA.iloc[memory["point"]].COMP_names
+        path = './structures/' + mol_name + '.xyz'
 
-        if active_tab == 'tab-speck':
+        if active_tab == "tab-speck":
 
             mol = aio.read(path)
             mol_data = [{'symbol': a, 'x': xyz[0],
@@ -552,7 +752,7 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
                 view={
                     'zoom': 0.06,
                     'resolution': 450,
-                    # 'ao': 0.1,
+                    'ao': 0.0001,
                     # 'outline': 1,
                     'atomScale': 0.15,
                     'relativeAtomScale': 0.33,
@@ -561,57 +761,17 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
                 presetView='stickball',
             )
         else:
-            mol = aio.read(path)
-            model_data = xyz_to_json(mol)
-            mol_plot = html.Div([
-                dashbio.Molecule2dViewer(
-                    id='my-dashbio-molecule2d',
-                    modelData=model_data,
-                    width=450,
-                    height=400,
-                ),
-                # html.Hr(style={'padding-top': '0pt'}),
-                html.Div(id='molecule2d-output')
-            ])
+            svg_file = './images/' + mol_name + '.svg'
+            encoded = base64.b64encode(open(svg_file, 'rb').read())
+            svg = 'data:image/svg+xml;base64,{}'.format(encoded.decode())
+            mol_plot = html.Img(src=svg, style={'width': '100%'})
         return mol_plot
 
 
     @app.callback(
-        Output('molecule2d-output', 'children'),
-        [Input('my-dashbio-molecule2d', 'selectedAtomIds')],
-        State('memory', 'data')
-    )
-    def update_selected_atoms(ids, memory):
-        mol_name = DATA.iloc[memory['point']].xyz_file_name
-        path = structures_dir + '/' + mol_name
-        mol = aio.read(path)
-
-        if ids is None or len(ids) == 0:
-            return 'No atom has been selected. Select atoms by clicking on them.'
-        elif len(ids) == 1:
-            return 'Selected atom ID: {}.'.format(', '.join([str(i) for i in ids]))
-        elif len(ids) == 2:
-            dist = mol.get_distance(ids[0], ids[1])
-            return 'Distance between atoms {}-{}: {:.3f}'.format(ids[0], ids[1], dist)
-        elif len(ids) == 3:
-            dist = mol.get_angle(ids[0], ids[1], ids[2])
-            return 'Angle between atoms {}-{}-{}: {:.3f}'.format(ids[0], ids[1], ids[2], dist)
-        elif len(ids) == 4:
-            dist = mol.get_dihedral(ids[0], ids[1], ids[2], ids[3])
-            return 'Dihedral angle between atoms {}-{}-{}-{}: {:.3f}'.format(ids[0], ids[1],
-                                                                             ids[2], ids[
-                                                                                 3],
-                                                                             dist)
-        else:
-            return 'Selected atom IDs: {}.'.format(', '.join([str(i) for i in ids]))
-
-        # return 'Selected atom IDs: {}.'.format(', '.join([str(i) for i in ids]))
-
-
-    @app.callback(
-        Output('modal', 'is_open'),
-        [Input('open', 'n_clicks'), Input('close', 'n_clicks')],
-        [State('modal', 'is_open')],
+        Output("modal", "is_open"),
+        [Input("open", "n_clicks"), Input("close", "n_clicks")],
+        [State("modal", "is_open")],
     )
     def toggle_modal(n1, n2, is_open):
         if n1 or n2:
@@ -621,38 +781,38 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
 
     @app.callback(
         [
-            Output('tableContainer', 'children'),
-            Output('showTable', 'children')
+            Output("tableContainer", "children"),
+            Output("showTable", "children")
         ],
         [
-            Input('showTable', 'n_clicks'),
+            Input("showTable", "n_clicks"),
         ],
         [
-            State('showTable', 'children')
+            State("showTable", "children")
         ]
     )
     def show_table(bt, text):
-        if 'show' in text.lower() and bt:
+        if "show" in text.lower() and bt:
             children = [
                 dash_table.DataTable(
                     id='table',
                     columns=[{'name': i, 'id': i}
                              for i in DATA.columns if i != 'id'],
-                    data=DATA.head(10).to_dict('rows'),
-                    sort_action='custom',
-                    sort_mode='multi',
-                    row_selectable='single',
-                    page_action='custom',
-                    selected_rows=[],
-                    page_current=0,
-                    page_size=10,
-                    sort_by=[],
+                    data=DATA.head(10).to_dict("rows"),
                     style_cell={
                         'overflow': 'hidden',
                         'textOverflow': 'ellipsis',
                         'maxWidth': '300px',
                         'minWidth': '100px'
                     },
+                    sort_action="custom",
+                    sort_mode="multi",
+                    row_selectable='single',
+                    page_action="custom",
+                    selected_rows=[],
+                    page_current=0,
+                    page_size=10,
+                    sort_by=[],
                     style_data_conditional=[{
                         'if': {'row_index': 'odd'},
                         'backgroundColor': 'rgb(248, 248, 248)'
@@ -674,10 +834,10 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
                     ],
                 )
             ]
-            button_text = 'Hide data table'
+            button_text = "Hide data table"
         else:
             children = []
-            button_text = 'Show data table'
+            button_text = "Show data table"
 
         return [children, button_text]
 
@@ -697,7 +857,7 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
             Input('table', 'sort_by'),
         ],
         [
-            State('table', 'data')
+            State("table", "data")
         ]
     )
     def update_table(page_size, page_current, data_timestamp, sort_by, data):
@@ -721,13 +881,13 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
 
         columns = [
             {
-                'name': i,
-                'id': i,
-                'clearable': True,
-                'selectable': True,
-                'renamable': False,
-                'hideable': True,
-                'deletable': False
+                "name": i,
+                "id": i,
+                "clearable": True,
+                "selectable": True,
+                "renamable": False,
+                "hideable": True,
+                "deletable": False
             }
             for i in DATA.columns
         ]
@@ -738,6 +898,7 @@ def create_app(data_file='examples/blaskovits2021_example/data.csv', structures_
         ]
 
     return app
+
 
 def create_server():
     """Shorthand function for running through gunicorn."""
