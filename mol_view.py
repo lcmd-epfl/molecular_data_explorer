@@ -6,9 +6,6 @@
 from app import create_app
 import sys
 
-data_file = sys.argv[1]
-structures_dir = sys.argv[2]
-
-app = create_app(data_file=data_file, structures_dir=structures_dir)
+app = create_app()
 
 app.run_server(port=8060, debug=True)

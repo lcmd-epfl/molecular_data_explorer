@@ -59,11 +59,10 @@ def xyz_to_json(mol):
     return data
 
 
-def create_app(data_file='blaskovits2021_example/data.csv',
-               structures_dir='blaskovits2021_example/structures'):
+def create_app():
 
     DATA = pd.read_csv(
-        './data.csv')
+        './blaskovits2021_example/data.csv')
 
 
     DATA = DATA.round(5)
@@ -738,7 +737,7 @@ def create_app(data_file='blaskovits2021_example/data.csv',
             raise PreventUpdate
 
         mol_name = DATA.iloc[memory["point"]].COMP_names
-        path = './structures/' + mol_name + '.xyz'
+        path = './blaskovits2021_example/structures/' + mol_name + '.xyz'
 
         if active_tab == "tab-speck":
 
@@ -752,8 +751,8 @@ def create_app(data_file='blaskovits2021_example/data.csv',
                 view={
                     'zoom': 0.06,
                     'resolution': 450,
-                    'ao': 0.0001,
-                    # 'outline': 1,
+                    # 'ao': 0.0001,
+                    # 'outline': 0.0001,
                     'atomScale': 0.15,
                     'relativeAtomScale': 0.33,
                     'bonds': True
@@ -761,7 +760,7 @@ def create_app(data_file='blaskovits2021_example/data.csv',
                 presetView='stickball',
             )
         else:
-            svg_file = './images/' + mol_name + '.svg'
+            svg_file = './blaskovits2021_example/images/' + mol_name + '.svg'
             encoded = base64.b64encode(open(svg_file, 'rb').read())
             svg = 'data:image/svg+xml;base64,{}'.format(encoded.decode())
             mol_plot = html.Img(src=svg, style={'width': '100%'})
