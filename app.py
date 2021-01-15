@@ -138,6 +138,10 @@ def create_app():
 
     ]
 
+    acceptor_donor_image_filename = './blaskovits2021_example/acceptor_donor_figure.png'
+    acceptor_donor_image_encoded_image = base64.b64encode(
+        open(acceptor_donor_image_filename, 'rb').read())
+
     info_text = [dcc.Markdown('''
         # App instructions
         - Click once to select a point, click twice to deselect it.
@@ -157,6 +161,15 @@ def create_app():
                                   "overflow-x": "auto",
                               }
                               ),
+                 dcc.Markdown(dangerously_allow_html=True,
+                              children=[
+                                  '''- Acceptor-Donor map:''',
+                              ],
+                              style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+                 html.Img(src='data:image/png;base64,{}'.format(acceptor_donor_image_encoded_image.decode()),
+                          style={'width': '100%'}
+                          ),
+
                  dcc.Markdown('''
         # Data generation details:
 
@@ -628,7 +641,13 @@ def create_app():
             details = [
                 dcc.Markdown(dangerously_allow_html=True,
                              children=[
-                                 '''**Compound index**: {}'''.format(pdata['COMP_names'])],
+                                 '''**Compound index**: {}&emsp;&emsp;'''.format(
+                                     pdata['COMP_names']),
+                                 '''**Acceptor index**: {}&emsp;&emsp;'''.format(
+                                     pdata['acceptor_index']),
+                                 '''**Donor index**: {}'''.format(
+                                     pdata['donor_index'])
+                             ],
                              style={"margin-bottom": "-12pt", "fontsize": "10%"}),
                 dcc.Markdown(dangerously_allow_html=True,
                              children=[
