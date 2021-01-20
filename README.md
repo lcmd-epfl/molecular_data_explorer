@@ -3,6 +3,8 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4382473.svg)](https://doi.org/10.5281/zenodo.4382473)
 
+Try it here!
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lcmd-epfl/molecular_data_explorer/matcloud?filepath=binder_notebook.ipynb)
 
 Python script to create a web app with Dash to visualize molecular data and molecular geometries
 
