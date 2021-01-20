@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import dash
+from jupyter_dash import JupyterDash
 import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
@@ -59,7 +60,7 @@ def xyz_to_json(mol):
     return data
 
 
-def create_app():
+def create_app(jupyter=False):
 
     DATA = pd.read_csv(
         './blaskovits2021_example/data.csv')
@@ -205,10 +206,16 @@ def create_app():
 
     external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-    app = dash.Dash(
-        __name__,
-        external_stylesheets=[dbc.themes.BOOTSTRAP],
-        suppress_callback_exceptions=True)
+    if jupyter == True:
+        app = JupyterDash(
+            __name__,
+            external_stylesheets=[dbc.themes.BOOTSTRAP],
+            suppress_callback_exceptions=True)
+    else:
+        app = dash.Dash(
+            __name__,
+            external_stylesheets=[dbc.themes.BOOTSTRAP],
+            suppress_callback_exceptions=True)
 
     select_x_options = [
         {"label": column, "value": column}

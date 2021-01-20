@@ -1,4 +1,5 @@
 ase
+jupyter_dash
 attrs
 biopython
 Brotli
