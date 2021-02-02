@@ -3,7 +3,7 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4382473.svg)](https://doi.org/10.5281/zenodo.4382473)
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/lcmd-epfl/molecular_data_explorer/blob/matcloud/acceptor-donor_collab.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/lcmd-epfl/molecular_data_explorer/blob/blaskovits2021/acceptor-donnor_collab.ipynb)
 
 Python script to create a web app with Dash to visualize the molecular data and molecular geometries of the paper [Identifying the Trade-off between Intramolecular Singlet Fission Requirements in Donor-Acceptor Copolymers](https://chemrxiv.org/articles/preprint/Identifying_the_Trade-off_between_Intramolecular_Singlet_Fission_Requirements_in_Donor-Acceptor_Copolymers/13333475/1)
 
