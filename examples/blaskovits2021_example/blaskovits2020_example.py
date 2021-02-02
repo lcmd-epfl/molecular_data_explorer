@@ -104,6 +104,10 @@ info_dict = [
 
 ]
 
+acceptor_donor_image_filename = './acceptor_donor_figure.png'
+acceptor_donor_image_encoded_image = base64.b64encode(
+    open(acceptor_donor_image_filename, 'rb').read())
+
 info_text = [dcc.Markdown('''
     # App instructions
     - Click once to select a point, click twice to deselect it.
@@ -123,6 +127,15 @@ info_text = [dcc.Markdown('''
                               "overflow-x": "auto",
                           }
                           ),
+             dcc.Markdown(dangerously_allow_html=True,
+                          children=[
+                              '''- Acceptor-Donor map:''',
+                          ],
+                          style={"margin-bottom": "-12pt", "fontsize": "10%"}),
+             html.Img(src='data:image/png;base64,{}'.format(acceptor_donor_image_encoded_image.decode()),
+                      style={'width': '100%'}
+                      ),
+
              dcc.Markdown('''
     # Data generation details:
 
@@ -139,7 +152,8 @@ info_text = [dcc.Markdown('''
     ''', dangerously_allow_html=True, style={"margin-bottom": "-12pt", "fontsize": "10%"}), dcc.Link(
     href='https://chemrxiv.org/articles/preprint/Identifying_the_Trade-off_between_Intramolecular_Singlet_Fission_Requirements_in_Donor-Acceptor_Copolymers/13333475/1',
     target='https://chemrxiv.org/articles/preprint/Identifying_the_Trade-off_between_Intramolecular_Singlet_Fission_Requirements_in_Donor-Acceptor_Copolymers/13333475/1',
-    children=['Identifying the Trade-off between Intramolecular Singlet Fission Requirements in Donor-Acceptor Copolymers', ],
+    children=[
+        'Identifying the Trade-off between Intramolecular Singlet Fission Requirements in Donor-Acceptor Copolymers', ],
     refresh=False,
     style={"margin-bottom": "25pt"},),
     dcc.Markdown(dangerously_allow_html=True,
@@ -152,11 +166,17 @@ info_text = [dcc.Markdown('''
     target='https://github.com/lcmd-epfl/molecular_data_explorer',
     children=['Molecular Data Explorer', ],
     refresh=False,
-    )
-    ]
+)
+]
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
+# if jupyter == True:
+#     app = JupyterDash(
+#         __name__,
+#         external_stylesheets=[dbc.themes.BOOTSTRAP],
+#         suppress_callback_exceptions=True)
+# else:
 app = dash.Dash(
     __name__,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
@@ -237,7 +257,8 @@ color_selection = dbc.FormGroup(
         dbc.Col(
             dbc.Select(
                 id="selectColor",
-                options=select_x_options,
+                options=[xx for xx in select_x_options if pd.to_numeric(
+                    DATA[xx['label']], errors='coerce').notnull().all()],
                 value='S1_T1_split'
             ), width=7
         )
@@ -320,7 +341,8 @@ app.layout = html.Div(children=[
                     min=0.01,
                     max=2,
                     value=0.5,
-                    handleLabel={"showCurrentValue": False, "label": "Scale"},
+                    handleLabel={
+                        "showCurrentValue": False, "label": "Scale"},
                     step=0.02,
                     id="size_scaler"
                 )
@@ -375,7 +397,6 @@ app.layout = html.Div(children=[
         ])
     ], id="container")
 ])
-
 
 @app.callback(
     [
@@ -457,14 +478,25 @@ def update_scatter_plot(input_x_column, input_y_column, input_z_column,
             ccc[0], ccc[1], ccc[2])] for ttt, ccc in zip(tiks[1:-1], colors)]
 
     if x_column and y_column and color_column:
+
+        color_column_data = DATA[color_column]
+        ccd_min = color_column_data.min()
+        ccd_max = color_column_data.max()
+        # if pd.to_numeric(color_column_data, errors='coerce').notnull().all():
+        #     color_column_data = None
+        #     ccd_min = None
+        #     ccd_max = None
+
         if z_column == 'None':
+
             fig = px.scatter(
                 DATA, x=x_column, y=y_column, color=color_column,
                 color_continuous_scale=color_values if colormap_column == 'Discrete' else colormap_column,
-                range_color=[DATA[color_column].min(),
-                             DATA[color_column].max()] if color_column != 'S1_T1_split' else [-2.5, 0.5],
+                range_color=[ccd_min,
+                             ccd_max] if color_column != 'S1_T1_split' else [-2.5, 0.5],
                 opacity=0.8,
-                hover_data={x_column: True, y_column: True, color_column: True}
+                hover_data={x_column: True,
+                            y_column: True, color_column: True}
             )
             fig.update_layout(clickmode='event+select')
 
@@ -489,8 +521,8 @@ def update_scatter_plot(input_x_column, input_y_column, input_z_column,
                 DATA, x=x_column, y=y_column, z=z_column, color=color_column,
                 opacity=1,
                 color_continuous_scale=color_values if colormap_column == 'Discrete' else colormap_column,
-                range_color=[DATA[color_column].min(),
-                             DATA[color_column].max()] if color_column != 'S1_T1_split' else [-2.5, 0.5],
+                range_color=[ccd_min,
+                             ccd_max] if color_column != 'S1_T1_split' else [-2.5, 0.5],
                 hover_data={x_column, y_column, color_column}
             )
             fig.update_layout(clickmode='event+select')
@@ -517,7 +549,6 @@ def update_scatter_plot(input_x_column, input_y_column, input_z_column,
     return [
         scatter_children
     ]
-
 
 @app.callback(
     [
@@ -554,7 +585,6 @@ def select_point(
                 ]
                 }]
 
-
 @app.callback(
     [
         Output("detailsContainer", "children"),
@@ -573,15 +603,23 @@ def update_point_details(click_data):
         cdata = click_data["points"][0]
         if "pointIndex" in cdata.keys():
             memory["point"] = click_data["points"][0]["pointIndex"]
-            pdata = DATA.iloc[click_data["points"][0]["pointIndex"]].to_dict()
+            pdata = DATA.iloc[click_data["points"]
+                              [0]["pointIndex"]].to_dict()
         else:
             memory["point"] = click_data["points"][0]["pointNumber"]
-            pdata = DATA.iloc[click_data["points"][0]["pointNumber"]].to_dict()
+            pdata = DATA.iloc[click_data["points"]
+                              [0]["pointNumber"]].to_dict()
 
         details = [
             dcc.Markdown(dangerously_allow_html=True,
                          children=[
-                             '''**Compound index**: {}'''.format(pdata['COMP_names'])],
+                             '''**Compound index**: {}&emsp;&emsp;'''.format(
+                                 pdata['COMP_names']),
+                             '''**Acceptor index**: {}&emsp;&emsp;'''.format(
+                                 pdata['acceptor_index']),
+                             '''**Donor index**: {}'''.format(
+                                 pdata['donor_index'])
+                         ],
                          style={"margin-bottom": "-12pt", "fontsize": "10%"}),
             dcc.Markdown(dangerously_allow_html=True,
                          children=[
@@ -611,7 +649,7 @@ def update_point_details(click_data):
                              '''**&Omega;<sup>T<sub>1</sub></sup><sub>D&#8594;A</sub>**: {0:.3f}&emsp;'''.format(pdata[
                                  'T1DtoA']),
                              '''**&Omega;<sup>T<sub>1</sub></sup><sub>D&#8594;D</sub>**: {0:.3f}'''.format(pdata[
-                                 'S1DtoD']),
+                                 'T1DtoD']),
                          ], style={"margin-bottom": "-12pt", "fontsize": "10%"}),
             dcc.Markdown(dangerously_allow_html=True,
                          children=[
@@ -689,7 +727,6 @@ def update_point_details(click_data):
         details, vis_tabs, memory
     ]
 
-
 @app.callback(
     Output("vis-content", "children"),
     [
@@ -716,8 +753,8 @@ def tab_content(active_tab, memory):
             view={
                 'zoom': 0.06,
                 'resolution': 450,
-                # 'ao': 0.1,
-                'outline': 0.00001,
+                # 'ao': 0.0001,
+                # 'outline': 0.0001,
                 'atomScale': 0.15,
                 'relativeAtomScale': 0.33,
                 'bonds': True
@@ -731,7 +768,6 @@ def tab_content(active_tab, memory):
         mol_plot = html.Img(src=svg, style={'width': '100%'})
     return mol_plot
 
-
 @app.callback(
     Output("modal", "is_open"),
     [Input("open", "n_clicks"), Input("close", "n_clicks")],
@@ -741,7 +777,6 @@ def toggle_modal(n1, n2, is_open):
     if n1 or n2:
         return not is_open
     return is_open
-
 
 @app.callback(
     [
@@ -805,7 +840,6 @@ def show_table(bt, text):
 
     return [children, button_text]
 
-
 @app.callback(
     [
         Output('table', 'data'),
@@ -860,6 +894,5 @@ def update_table(page_size, page_current, data_timestamp, sort_by, data):
         result_paginated.to_dict('records'),
         columns, True, False, page_count
     ]
-
 
 app.run_server(port=8160, debug=True)
