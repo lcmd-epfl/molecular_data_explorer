@@ -4,4 +4,4 @@ https://chemrxiv.org/articles/preprint/Identifying_the_Trade-off_between_Intramo
 
 Execute as:
 
-python blaskovits2020_example.py
+`python blaskovits2020_example.py`

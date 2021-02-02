@@ -3,8 +3,8 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4382473.svg)](https://doi.org/10.5281/zenodo.4382473)
 
-Try it here!
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lcmd-epfl/molecular_data_explorer/matcloud?filepath=binder_notebook.ipynb)
+<!-- Try it here!
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lcmd-epfl/molecular_data_explorer/matcloud?filepath=binder_notebook.ipynb) -->
 
 Python script to create a web app with Dash to visualize molecular data and molecular geometries
 
@@ -20,7 +20,9 @@ Use pip to install requirements:
 
 ## Usage
 
-The app is executed as:
+To reproduce the results of [Identifying the Trade-off between Intramolecular Singlet Fission Requirements in Donor-Acceptor Copolymers](https://chemrxiv.org/articles/preprint/Identifying_the_Trade-off_between_Intramolecular_Singlet_Fission_Requirements_in_Donor-Acceptor_Copolymers/13333475/1) got to examples/blaskovits2021_example/
+
+To use with your own data, execute the app as:
 
 `python mol_view.py data.csv xyz_structures_directory`
 
