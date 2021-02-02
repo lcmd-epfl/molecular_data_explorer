@@ -8,19 +8,17 @@ Python script to create a web app with Dash to visualize the molecular data and 
 ## Requirements
 - Python 3.6 or newer
 
-Use pip to install requirements:
 
-`pip install -r requirements.txt`
 
 ## Usage
 
-1. Download code:
+1. Download code: \\
 	 `git clone -b blaskovits2021 https://github.com/lcmd-epfl/molecular_data_explorer.git ./blaskovits2021_app`
 
-2. Enter the directory and install python requirements:
+2. Enter the directory and install python requirements: \\
 	`pip install -r requirements.txt`
 
-3. Execute the app:
-	`python blaskovits2021.py`
+3. Execute the app: \\
+	`python blaskovits2021.py` \\
 
 	Then open the following addres: http://127.0.0.1:8060/ in your browser (the address can be changed in the last line of the script).
