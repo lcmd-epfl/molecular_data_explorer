@@ -1,7 +1,8 @@
 # Molecular data explorer
 
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4382473.svg)](https://doi.org/10.5281/zenodo.4382473)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4564039.svg)](https://doi.org/10.5281/zenodo.4564039)
+
 
 <!-- Try it here!
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lcmd-epfl/molecular_data_explorer/matcloud?filepath=binder_notebook.ipynb) -->
